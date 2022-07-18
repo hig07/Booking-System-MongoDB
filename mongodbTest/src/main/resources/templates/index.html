@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:fragment="head">
+	<meta charset="UTF-8">
+	<meta name="_csrf" th:content="${_csrf.token}"/>
+	<!-- default header name is X-CSRF-TOKEN -->
+	<meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+	<title>Insert title here</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script type="text/javascript" src="/js/myScript.js"></script>
+</head>
+<body>
+	<!-- <header th:fragment="header"> -->
+		<h1>헤더영역</h1>
+		<div>
+			<a href="/">HOME</a>
+			<a href="/sign/signup">회원가입</a>
+			<span sec:authorize="isAnonymous()">
+				<a href="/sign/signin">로그인</a>
+			</span>
+			<span sec:authorize="isAuthenticated()">
+				<a href="#" sec:authentication="principal.name">이름출력</a>
+				<button id="btn-logout">로그아웃</button>
+			</span>
+    		<script type="text/javascript">
+    			$(function () {
+    				$("#btn-logout").click(function(){
+    					var token = $("meta[name='_csrf']").attr("content");
+    	    			var header = $("meta[name='_csrf_header']").attr("content");
+    	    			
+    	    			$.ajax({
+    	    				beforeSend: function(xhr){xhr.setRequestHeader(header, token);},
+    	    				url:"/logout",
+    	    				type:"post",
+    	    				success:function(){
+    	    					location.href="/";
+    	    				}
+    	    			});
+    				});
+    			});
+    		</script>
+			<a href="/board/list"><button type="button" id="btn-b2">Mongo-게시판</button></a>
+		</div>
+	</header>
+</body>
+</html>

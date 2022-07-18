@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<!-- <th:block th:insert="view/common/common::head" /> -->
+    <link rel="stylesheet" href="/css/board/list.css">
+</head>
+<body>
+	<!-- <th:block th:insert="view/common/common::header" /> -->
+	<main>
+		<div class="blist-wrap">
+			<h1>Mongo-게시판입니다.</h1>
+			<p th:if="${session.loginfo}"><a href="/board/write">글쓰기</a></p>
+			<table>
+				<thead>
+					<tr>
+						<td>글번호</td>
+						<td>제목</td>
+						<!-- <td>작성일</td> -->
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="" class="tbody-tr" th:each="dto : ${list}">
+						<td th:text="${dto.id}">글번호</td>
+						<td><a th:href="|/board/${dto.id}|" th:text="${dto.title}">제목이들어가요</a></td>
+						<!-- <td th:text="${dto.updatedDate.toLocalDate()}">작성일</td> -->
+					</tr>
+					<tr th:if="${#lists.isEmpty(list)}">
+						<td colspan="5">게시글이 존재하지 않습니다.</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="page-btn-div" th:unless="${#lists.isEmpty(list)}">
+				<a th:if="${pi.start gt 1}" th:href="@{/board(pageNo=${pi.start-1})}">
+					<button type="button">&lt;</button>
+				</a>
+				<a th:each="pno : ${#numbers.sequence(pi.start,pi.end)}" th:href="@{/board(pageNo=${pno})}">
+					<button type="button">[[${pno}]]</button>
+				</a>
+				<a th:if="${pi.end lt pi.total}" th:href="@{/board(pageNo=${pi.end+1})}"> 
+					<button type="button">&gt;</button>
+				</a>
+			</div>
+		</div>
+	</main>
+</body>
+</html>
